@@ -12,3 +12,12 @@ git add .
 git commit -m "your message here"
 git push
 ```
+### To get the most up to date code, run the following command:
+```bash
+git pull
+```
+If you get some error, try 
+```bash
+git stash
+git pull
+```
