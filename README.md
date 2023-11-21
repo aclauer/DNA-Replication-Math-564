@@ -3,3 +3,12 @@ Group research project investigating DNA replication in fission yeast cells. Thi
 
 ## Sources
 [Modeling the control of DNA replication in fission yeast](https://www.pnas.org/doi/abs/10.1073/pnas.94.17.9147)
+
+
+## GIT INSTRUCTIONS
+### To commit your code (i.e. push it to github), run the following commands:
+```bash
+git add .
+git commit -m "your message here"
+git push
+```
