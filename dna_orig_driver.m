@@ -5,11 +5,11 @@ clear all
 
 %%%%%%%%%%%%%%%%%%%%%%
 % INITIAL CONDITION
-Y0 = [0;0;1]; %not sure what to make these
+Y0 = [0.48;0.25;1]; %not sure what to make these
 %%%%%%%%%%%%%%%%%%%%%%
 
 %timespan
-tRange = [0 100];
+tRange = [0 1000];
 
 % parameters in equation
 k1=0.015;
@@ -42,9 +42,9 @@ grid on
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 % generate grid for phase plane [0 M] X [0 N]
-M=0.5;
-N=2;
-[xx,yy]=meshgrid(0:0.1:M,0:0.1:N);
+M=2;
+N=0.5;
+[xx,yy]=meshgrid(linspace(0,M,20),linspace(0,N,20));
 %xx represents G2T and yy represents RT
 
 % define the right hand sides
@@ -64,7 +64,7 @@ L = sqrt(dG2Tdt.^2 + dRTdt.^2);
 % plot the direction field
 figure(2)
 clf % clear the current figure
-quiver(xx,yy,dG2Tdt./L, dRTdt./L,0.5,'LineWidth',1.5); % The final argument is a scaling factor
+quiver(yy,xx, dRTdt./L,dG2Tdt./L,0.1); % The final argument is a scaling factor
 hold on
 
 % define the nullclines
@@ -72,10 +72,10 @@ g2rfun = @(x,y) (2.*y.*x)./(y + x + .001 + sqrt((y + x + .001).^2 - 4.*y.*x));
 ncfun1 = @(x,y) k1 - k2*x - k2_*g2rfun(x,y);
 ncfun2 = @(x,y) k3 - k4*y - (kp*(y-g2rfun(x,y)).*(x-g2rfun(x,y))*mass)./(Kmp + y - g2rfun(x,y));
 % plot the nullclines
-fimplicit(@(x,y) ncfun1(x,y), [0 M 0 N],'LineWidth',3)
-fimplicit(@(x,y) ncfun2(x,y), [0 M 0 N],'LineWidth',3);
+fimplicit(@(y,x) ncfun1(x,y), [0 0.5 0 2],'LineWidth',3)
+fimplicit(@(y,x) ncfun2(x,y), [0 0.5 0 2],'LineWidth',3);
 
 % plot the trajectories in blue
 % these are just plotting s1 vs s2 using solutions from above
-plot(YSol(:,1),YSol(:,3),'b','LineWidth',2)
+plot(YSol(:,1),YSol(:,1),'b','LineWidth',2)
 axis tight

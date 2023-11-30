@@ -22,9 +22,6 @@ dG2Tdt= k1 - k2*G2T - k2_*G2R;
 %A7
 dRTdt= k3 - k4*RT - (kp*(RT-G2R)*(G2T-G2R)*mass)/(Kmp + RT - G2R);
 
-%UBE
-
-
 % TODO - Create output column vector dYdt
 dYdt = [dG2Tdt; dRTdt;dmassdt];
 
