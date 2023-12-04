@@ -24,37 +24,37 @@ mass=1;
 
 % call the ODE solver ode15s instead of ode45
 % to send parameters to the ode solver, use the following command:
-[tSol,YSol] = ode15s(@(tSol,YSol)dna_orig(tSol,YSol,p),tRange,Y0);
+%[tSol,YSol] = ode15s(@(tSol,YSol)dna_orig(tSol,YSol,p),tRange,Y0);
 
 
 % plot solutions in time
-figure(1)
-clf
-plot(tSol,YSol,'LineWidth',2)
-xlabel('Time')
-ylabel('Concentration')
-legend('S_1','S_2')
-set(gca,'FontSize',18)
-grid on
+%figure(1)
+%clf
+%plot(tSol,YSol,'LineWidth',2)
+%xlabel('Time')
+%ylabel('Concentration')
+%legend('S_1','S_2')
+%set(gca,'FontSize',18)
+%grid on
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Make the phase portrait
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
 % generate grid for phase plane [0 M] X [0 N]
-M=2;
-N=0.5;
+M=0.5;
+N=2;
 [xx,yy]=meshgrid(linspace(0,M,20),linspace(0,N,20));
-%xx represents G2T and yy represents RT
+% xx represents RT and yy represents G2T
 
 % define the right hand sides
 %right hand sides also depend on these functions:
-G2R = (2.*yy.*xx)./(yy + xx + .001 + sqrt((yy + xx + .001).^2 - 4.*yy.*xx));
+G2R = (2.*xx.*yy)./(xx + yy + .001 + sqrt((xx + yy + .001).^2 - 4.*xx.*yy));
 
 %A6
-dG2Tdt= k1 - k2.*xx - k2_.*G2R; 
+dG2Tdt= k1 - k2.*yy - k2_.*G2R; 
 %A7
-dRTdt= k3-k4.*yy-(kp.*(yy-G2R).*(xx-G2R).*mass);%./(Kmp+yy-G2R);
+dRTdt= k3-k4.*xx-(kp.*(xx-G2R).*(yy-G2R).*mass);%./(Kmp+yy-G2R);
 %Mass
 dmassdt= 0.00495*mass;
 
@@ -64,18 +64,19 @@ L = sqrt(dG2Tdt.^2 + dRTdt.^2);
 % plot the direction field
 figure(2)
 clf % clear the current figure
-quiver(yy,xx, dRTdt./L,dG2Tdt./L,0.1); % The final argument is a scaling factor
+quiver(xx,yy, dRTdt./L,dG2Tdt./L,0.2); % The final argument is a scaling factor
 hold on
 
 % define the nullclines
-g2rfun = @(x,y) (2.*y.*x)./(y + x + .001 + sqrt((y + x + .001).^2 - 4.*y.*x));
-ncfun1 = @(x,y) k1 - k2*x - k2_*g2rfun(x,y);
-ncfun2 = @(x,y) k3 - k4*y - (kp*(y-g2rfun(x,y)).*(x-g2rfun(x,y))*mass)./(Kmp + y - g2rfun(x,y));
+% x represents RT and y represents G2T
+g2rfun = @(x,y) (2.*x.*y)./(x + y + .001 + sqrt((x + y + .001).^2 - 4.*x.*y));
+ncfun1 = @(x,y) k1 - k2*y - k2_*g2rfun(x,y);
+ncfun2 = @(x,y) k3 - k4*x - (kp*(x-g2rfun(x,y)).*(y-g2rfun(x,y))*mass)./(Kmp + x - g2rfun(x,y));
 % plot the nullclines
-fimplicit(@(y,x) ncfun1(x,y), [0 0.5 0 2],'LineWidth',3)
-fimplicit(@(y,x) ncfun2(x,y), [0 0.5 0 2],'LineWidth',3);
+fimplicit(@(x,y) ncfun1(x,y), [0 0.5 0 2],'LineWidth',3)
+fimplicit(@(x,y) ncfun2(x,y), [0 0.5 0 2],'LineWidth',3);
 
 % plot the trajectories in blue
 % these are just plotting s1 vs s2 using solutions from above
-plot(YSol(:,1),YSol(:,1),'b','LineWidth',2)
-axis tight
+%plot(YSol(:,1),YSol(:,1),'b','LineWidth',2)
+%axis tight
