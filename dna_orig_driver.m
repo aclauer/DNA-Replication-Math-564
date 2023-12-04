@@ -18,7 +18,7 @@ k3=0.09375;
 k4=0.1875;
 kp=3.25;
 Kmp=0.001;
-k2_=0.05; %meant to represent k2' but we cannot use apostrophes in var names
+k2_=0.05; % represents k2'
 p = [k1, k2, k3, k4, kp, Kmp, k2_];
 mass=1;
 
@@ -44,7 +44,7 @@ mass=1;
 % generate grid for phase plane [0 M] X [0 N]
 M=0.5;
 N=2;
-[xx,yy]=meshgrid(linspace(0,M,20),linspace(0,N,20));
+[xx,yy]=meshgrid(linspace(0,M,25),linspace(0,N,25));
 % xx represents RT and yy represents G2T
 
 % define the right hand sides
@@ -54,7 +54,7 @@ G2R = (2.*xx.*yy)./(xx + yy + .001 + sqrt((xx + yy + .001).^2 - 4.*xx.*yy));
 %A6
 dG2Tdt= k1 - k2.*yy - k2_.*G2R; 
 %A7
-dRTdt= k3-k4.*xx-(kp.*(xx-G2R).*(yy-G2R).*mass);%./(Kmp+yy-G2R);
+dRTdt= k3-k4.*xx-(kp.*(xx-G2R).*(yy-G2R).*mass)./(Kmp+xx-G2R);%./(Kmp+yy-G2R);
 %Mass
 dmassdt= 0.00495*mass;
 
@@ -64,7 +64,7 @@ L = sqrt(dG2Tdt.^2 + dRTdt.^2);
 % plot the direction field
 figure(2)
 clf % clear the current figure
-quiver(xx,yy, dRTdt./L,dG2Tdt./L,0.2); % The final argument is a scaling factor
+quiver(xx, yy, dRTdt./L, dG2Tdt./L, 0.2); % The final argument is a scaling factor
 hold on
 
 % define the nullclines
@@ -73,8 +73,8 @@ g2rfun = @(x,y) (2.*x.*y)./(x + y + .001 + sqrt((x + y + .001).^2 - 4.*x.*y));
 ncfun1 = @(x,y) k1 - k2*y - k2_*g2rfun(x,y);
 ncfun2 = @(x,y) k3 - k4*x - (kp*(x-g2rfun(x,y)).*(y-g2rfun(x,y))*mass)./(Kmp + x - g2rfun(x,y));
 % plot the nullclines
-fimplicit(@(x,y) ncfun1(x,y), [0 0.5 0 2],'LineWidth',3)
-fimplicit(@(x,y) ncfun2(x,y), [0 0.5 0 2],'LineWidth',3);
+fimplicit(@(x,y) ncfun1(x,y), [0 M 0 N],'LineWidth',3)
+fimplicit(@(x,y) ncfun2(x,y), [0 M 0 N],'LineWidth',3);
 
 % plot the trajectories in blue
 % these are just plotting s1 vs s2 using solutions from above
