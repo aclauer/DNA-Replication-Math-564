@@ -1,12 +1,4 @@
 clear all
-%close all
-
-% First solve the ode system
-
-%%%%%%%%%%%%%%%%%%%%%%
-% INITIAL CONDITION
-Y0 = [0.48;0.25;1]; %not sure what to make these
-%%%%%%%%%%%%%%%%%%%%%%
 
 %timespan
 tRange = [0 1000];
@@ -22,21 +14,6 @@ k2_=0.05; % represents k2'
 p = [k1, k2, k3, k4, kp, Kmp, k2_];
 mass=1;
 
-% call the ODE solver ode15s instead of ode45
-% to send parameters to the ode solver, use the following command:
-%[tSol,YSol] = ode15s(@(tSol,YSol)dna_orig(tSol,YSol,p),tRange,Y0);
-
-
-% plot solutions in time
-%figure(1)
-%clf
-%plot(tSol,YSol,'LineWidth',2)
-%xlabel('Time')
-%ylabel('Concentration')
-%legend('S_1','S_2')
-%set(gca,'FontSize',18)
-%grid on
-
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Make the phase portrait
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,7 +21,7 @@ mass=1;
 % generate grid for phase plane [0 M] X [0 N]
 M=0.5;
 N=2;
-[xx,yy]=meshgrid(linspace(0,M,25),linspace(0,N,25));
+[xx,yy]=meshgrid(linspace(0,M,10),linspace(0,N,15));
 % xx represents RT and yy represents G2T
 
 % define the right hand sides
@@ -64,7 +41,7 @@ L = sqrt(dG2Tdt.^2 + dRTdt.^2);
 % plot the direction field
 figure(2)
 clf % clear the current figure
-quiver(xx, yy, dRTdt./L, dG2Tdt./L, 0.2); % The final argument is a scaling factor
+quiver(xx, yy, dRTdt./L, dG2Tdt./L, 0.1); % The final argument is a scaling factor
 hold on
 
 % define the nullclines
@@ -75,8 +52,3 @@ ncfun2 = @(x,y) k3 - k4*x - (kp*(x-g2rfun(x,y)).*(y-g2rfun(x,y))*mass)./(Kmp + x
 % plot the nullclines
 fimplicit(@(x,y) ncfun1(x,y), [0 M 0 N],'LineWidth',3)
 fimplicit(@(x,y) ncfun2(x,y), [0 M 0 N],'LineWidth',3);
-
-% plot the trajectories in blue
-% these are just plotting s1 vs s2 using solutions from above
-%plot(YSol(:,1),YSol(:,1),'b','LineWidth',2)
-%axis tight
