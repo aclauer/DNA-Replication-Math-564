@@ -1,7 +1,7 @@
 clear all
 
 % Define all perturbations that you want to make to the parameters
-perturbations = [0.001, 0.01, 0.1];
+perturbations = [0.0001, 0.001, 0.01, 0.05, 0.1, 0.2];
 
 % Loop through each of these values
 for perturb = perturbations
@@ -19,8 +19,7 @@ for perturb = perturbations
         p = [k1, k2, k3, k4, kp, Kmp, k2_];
         mass=1;
 
-        % Perturb the relevant parameter here:
-        k1 = k1 + k1*i*perturb;
+        kp = kp + kp*i*perturb;
         
         % generate grid for phase plane [0 M] X [0 N]
         M=0.5;
@@ -56,19 +55,19 @@ for perturb = perturbations
         fimplicit(@(x,y) ncfun2(x,y), [0 M 0 N],'LineWidth',3);
         
         % Set the title to define the parameter being modified
-        title_text = sprintf('Phase Plane, k1 = %f', k1); 
+        title_text = sprintf('Phase Plane, kp = %f', kp); 
         title(title_text);
         xlabel('Total Rum1');
         ylabel('Total Cdc13');  
     
         % Set the file name to specify the parameter being changed and its
         % value
-        filename = sprintf('k1_%.5f.png', k1);
+        filename = sprintf('kp_%.5f.png', kp);
     
-        print(filename, '-dpng') 
+        print(filename, '-dpng')
         
         % Define the folder that you want to place the phase planes in
         % NOTE: You must create this folder prior to running this script!
-        movefile(filename, 'k1_phase_planes');
+        movefile(filename, 'kp_phase_planes');
     end
 end
